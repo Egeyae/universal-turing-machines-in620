@@ -57,8 +57,8 @@ bad,#,1,-,<
 read,0,_
 end,0,_,>,-
 
-read,0,_
-end,0,_,>,-
+read,1,_
+end,1,_,>,-
 
 // end of x + wi => valid
 read,#,_
