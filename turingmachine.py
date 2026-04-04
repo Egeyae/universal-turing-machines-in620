@@ -87,13 +87,46 @@ class TM:
             conf: Config
             movements: direction in which to move each tape of the Config
         """
+        for i in range(self.nb_tapes):
+            direction = movements[i]
+
+            if direction == 'R':
+                symbol = conf.under[i].pop(0) if conf.under[i] else '.'
+                conf.before[i].append(symbol)
+                if not conf.under[i]:
+                    conf.under[i].append('.')  # étendre le ruban si nécessaire
+
+            elif direction == 'L':
+                incoming = conf.before[i].pop() if conf.before[i] else '.'
+                conf.under[i].insert(0, incoming)
         
+                
+
 
     def next_step(self, conf):
         """
         Given a Config, returns the new Config following the machine rules
         """
-        pass
+        if conf.q == self.accept:
+            return conf  
+
+        key = self.read(conf)
+
+        if key not in self.transitions:
+            raise ValueError(f"Pas de transition pour {key}")
+
+        transition = self.transitions[key]
+        new_state = transition[0]
+        rest = transition[1:] 
+
+        new_symbols = [rest[i * 2]     for i in range(self.nb_tapes)]
+        movements   = [rest[i * 2 + 1] for i in range(self.nb_tapes)]
+
+        self.write(conf, new_symbols)
+        self.move(conf, movements)
+        conf.q = new_state
+
+        return conf
 
     def run(self, conf):
         """
