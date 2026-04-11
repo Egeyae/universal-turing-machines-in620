@@ -57,7 +57,7 @@ class TM:
         Args:
             conf: Config
         Return
-            (q, a1, a2, ...): tuple describing what is read
+            (q, a1, a2, ...):  tuple describing what is read
         """
         machine = []
         for i in range(self.nb_tape) :
@@ -90,25 +90,24 @@ class TM:
         for i in range(self.nb_tapes):
             direction = movements[i]
 
-            if direction == 'R':
-                symbol = conf.under[i].pop(0) if conf.under[i] else '.'
+            if direction == '>':
+                symbol = conf.under[i].pop(0) if conf.under[i] else '_'
                 conf.before[i].append(symbol)
                 if not conf.under[i]:
-                    conf.under[i].append('.')  # étendre le ruban si nécessaire
+                    conf.under[i].append('_')  
 
-            elif direction == 'L':
-                incoming = conf.before[i].pop() if conf.before[i] else '.'
+            elif direction == '<':
+                incoming = conf.before[i].pop() if conf.before[i] else '_'
                 conf.under[i].insert(0, incoming)
         
-                
-
+        
 
     def next_step(self, conf):
         """
         Given a Config, returns the new Config following the machine rules
         """
         if conf.q == self.accept:
-            return conf  
+            return conf
 
         key = self.read(conf)
 
@@ -117,16 +116,18 @@ class TM:
 
         transition = self.transitions[key]
         new_state = transition[0]
-        rest = transition[1:] 
+        rest = transition[1:]
 
-        new_symbols = [rest[i * 2]     for i in range(self.nb_tapes)]
-        movements   = [rest[i * 2 + 1] for i in range(self.nb_tapes)]
-
+        new_symbols = list(rest[:self.nb_tapes])
+        movements   = list(rest[self.nb_tapes:])
         self.write(conf, new_symbols)
         self.move(conf, movements)
         conf.q = new_state
 
         return conf
+
+
+        
 
     def run(self, conf):
         """
