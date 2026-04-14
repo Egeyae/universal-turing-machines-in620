@@ -143,18 +143,34 @@ class TM:
 
         return conf 
 
-    def run(self, conf: Config) -> None:
+    def run(self, conf: Config) -> Config:
         """
         Given a Config, computes all Config until end of program (q = 1) and returns the last Config
         """
-        pass
+        while conf.q != self.accept and conf.q !=-1:
+            self.next_step(conf)
+        return conf
 
     def run_print(self, conf: Config) -> None:
         """
         Given a Config, computes all Config until end of program (q = 1) and returns the last Config
         Also prints out in a pretty manner how it works
         """
-        pass
+        print(f"Running with TM : {self.name}")
+        step = 0
+        while conf.q != self.accept and conf.q != -1:
+            tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+            string = f"Step = {step} : {tuple_print}"
+            print(string)
+            self.next_step(conf)
+            step += 1
+        tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+        print(f"Final Configuration : {tuple_print}",end="")
+        if conf.q == self.accept :
+            print(" Accept")
+        else :
+            print(" Reject")
+        return conf
 
     def create_init_config(self, input_: str) -> Config:
         """

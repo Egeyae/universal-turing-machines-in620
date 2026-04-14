@@ -12,6 +12,7 @@ class TestTM:
 		TestTM.write()
 		TestTM.move()
 		TestTM.next_step()
+		TestTM.run()
 
 
 	@staticmethod
@@ -101,7 +102,6 @@ class TestTM:
 
 		print ("Testing complete")
 
-	@staticmethod
 	def move() :
 		print("Testing Moving") 
 		TM_test1 = p.load_from_file("./files/test_1tape.tm")
@@ -149,6 +149,24 @@ class TestTM:
 		assert config_init2.under[0][0] == '0' and config_init2.under[0][1] == '0'
 
 		print("Testing Complete")
+
+	@staticmethod
+	def run():
+		print("Testing Run")
+		TM_test1 = p.load_from_file("./files/test_1tape.tm")
+		TM_test2 = p.load_from_file("./files/test_2tapes.tm")
+
+		#Test with the first TM - One tape - Input '000'
+		config_init1 = TM_test1.create_init_config('000')
+		config_test1 = TM_test1.run(config_init1)
+		assert config_test1.q == TM_test1.accept and config_test1.under[0][0] == '_'
+
+		#Test with the second TM - Two tapes - Input '000'
+		config_init2 = TM_test2.create_init_config('0000')
+		config_test2 = TM_test2.run(config_init2)
+		assert config_test2.q == TM_test2.accept and config_test2.under[0][0] == '_' and config_test2.under[1][0] == '_'
+		print("Testing Complete")
+
 
 
 class TestUniversalTM:
