@@ -214,8 +214,6 @@ class TM:
 
         return Config(before,under,self.init)
 
-
-
 if __name__ == '__main__':
     tm = TM("toto", {0, 1, 2, 3}, 0, 3, 2, dict())
     print(tm)

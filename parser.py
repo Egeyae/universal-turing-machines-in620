@@ -59,6 +59,46 @@ def load_from_file(filepath: str) -> TM:
 
 	return TM(name,states,init,accept,number_tapes,transitions)
 
+def conversion_binaire(number):
+	"""Function that ables to convert decimal numbers in binary numbers
+	Parameter : number which represents the decimal number"""
+	reste = []
+	
+	while number//2 != 0 :
+		reste.append(number%2)
+		number = number//2
+	reste.reverse()
+
+	return(reste)
+
+
+def rename_states(machine) :
+	"""Renames all the states with a binary number instead
+	We force the naming of the initial state and the accept state to 0 and 1 each
+	Parameters : machine which represents the turing machine we want to convert
+	"""
+	dico_states = {}
+	dico_states[dico_states.init] = "0"
+	dico_states[dico_states.accept] = "1"
+
+	counter = 1
+
+	for state in machine.states :
+		if state not in dico_states:
+			dico_states[state] = conversion_binaire(counter)
+			counter+=1
+	
+	return(dico_states)
+
+def encode_transition():
+	
+
+	
+
+		
+
+
+
 
 if __name__ == '__main__':
 	x=load_from_file("./files/test_2tapes.tm")
