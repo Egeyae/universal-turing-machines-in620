@@ -90,8 +90,26 @@ def rename_states(machine) :
 	
 	return(dico_states)
 
-def encode_transition():
+def encode_transition(machine):
+	"""Transforms the syntax of the MT transitions into the syntax wanted
+	Parameter : MT"""
+	states = rename_states(machine)
+	t_transitions = []
 	
+	for key,value in machine.transitions.items() :
+		L= []
+		current_state = states[key[0]]
+		symbol_read = key[1]
+
+		new_state = states[value[0]]
+		symbol_written = value[1][0]
+		movement = value[2][0]
+		L.append(current_state + "|" + symbol_read + "|" + symbol_written + "|" + movement + "|" + new_state)
+
+	return "|".join(t_transitions)
+
+
+
 
 	
 
