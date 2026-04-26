@@ -59,6 +59,7 @@ def load_from_file(filepath: str) -> TM:
 
 	return TM(name,states,init,accept,number_tapes,transitions)
 
+
 def conversion_binaire(number):
 	"""Function that ables to convert decimal numbers in binary numbers
 	Parameter : number which represents the decimal number"""
@@ -90,6 +91,22 @@ def rename_states(machine) :
 	
 	return(dico_states)
 
+def conversion_binaire_alphabet(symbol):
+	return ord(symbol) - ord(symbol)
+
+def encode_alphabet(machine):
+	alphabet = []
+
+	for key,value in machine.transitions.items():
+		alphabet.append(key[0])
+		alphabet.append(value[0])
+
+	alphabet_bis = {}
+	for symbol in alphabet :
+		alphabet_bis[symbol] = conversion_binaire_alphabet(symbol)
+	return alphabet_bis
+
+
 def encode_transition(machine):
 	"""Transforms the syntax of the MT transitions into the syntax wanted
 	Parameter : MT"""
@@ -108,6 +125,12 @@ def encode_transition(machine):
 
 	return "|".join(t_transitions)
 
+
+
+def MU(filepath):
+	machine = load_from_file(filepath)
+	machine_final = encode_transition(machine)
+	return machine_final
 
 
 
