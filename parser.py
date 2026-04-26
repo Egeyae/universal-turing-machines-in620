@@ -58,19 +58,28 @@ def load_from_file(filepath: str) -> TM:
 		transitions[read] = write
 
 	return TM(name,states,init,accept,number_tapes,transitions)
+	
+if __name__ == '__main__':
+	x=load_from_file("./files/test_2tapes.tm")
+	print(x)
 
+	c = x.create_init_config("1001010100")
+	print(x.next_step(c))
 
 def conversion_binaire(number):
 	"""Function that ables to convert decimal numbers in binary numbers
 	Parameter : number which represents the decimal number"""
 	reste = []
+
+	if number == 0:
+		return '0'
 	
 	while number//2 != 0 :
 		reste.append(number%2)
 		number = number//2
 	reste.reverse()
 
-	return(reste)
+	return ''.join(str(b) for b in reste)
 
 
 def rename_states(machine) :
@@ -79,10 +88,10 @@ def rename_states(machine) :
 	Parameters : machine which represents the turing machine we want to convert
 	"""
 	dico_states = {}
-	dico_states[dico_states.init] = "0"
-	dico_states[dico_states.accept] = "1"
+	dico_states[machine.init] = "0"
+	dico_states[machine.accept] = "1"
 
-	counter = 1
+	counter = 2
 
 	for state in machine.states :
 		if state not in dico_states:
@@ -95,11 +104,11 @@ def conversion_binaire_alphabet(symbol):
 	return ord(symbol) - ord(symbol)
 
 def encode_alphabet(machine):
-	alphabet = []
+	alphabet = ()
 
 	for key,value in machine.transitions.items():
-		alphabet.append(key[0])
-		alphabet.append(value[0])
+		alphabet.add(key[0])
+		alphabet.add(value[0])
 
 	alphabet_bis = {}
 	for symbol in alphabet :
@@ -111,39 +120,43 @@ def encode_transition(machine):
 	"""Transforms the syntax of the MT transitions into the syntax wanted
 	Parameter : MT"""
 	states = rename_states(machine)
+	alphabet_machine = encode_alphabet(machine)
 	t_transitions = []
 	
 	for key,value in machine.transitions.items() :
-		L= []
 		current_state = states[key[0]]
-		symbol_read = key[1]
+		symbol_read = str(alphabet_machine[key[1]])
 
 		new_state = states[value[0]]
-		symbol_written = value[1][0]
+		symbol_written = str(alphabet_machine[value[1][0]])
 		movement = value[2][0]
-		L.append(current_state + "|" + symbol_read + "|" + symbol_written + "|" + movement + "|" + new_state)
+		t_transitions.append(current_state + "|" + symbol_read + "|" + symbol_written + "|" + movement + "|" + new_state)
 
 	return "|".join(t_transitions)
 
-
-
 def MU(filepath):
+	"""Final function to determine a universal machine 
+	Parameter : filepath"""
 	machine = load_from_file(filepath)
 	machine_final = encode_transition(machine)
 	return machine_final
 
+#test marche pas mon pc reconait pas la classe Config jsp pk
+#print(MU("test_1tape.tm"))
+
+def encode_binary(filepath):
+	"""Function that produces the binary coding of the mt simulator file 
+	Parameter : filepath"""
+	machine_final = MU(filepath)
+
+	encoding = []
+
+	for symbol in machine_final : 
+		encoding.append(conversion_binaire(ord(symbol)))
+	"".join(encoding)
+
+	integer = int(encoding, 2)
+
+	return encoding, integer
 
 
-	
-
-		
-
-
-
-
-if __name__ == '__main__':
-	x=load_from_file("./files/test_2tapes.tm")
-	print(x)
-
-	c = x.create_init_config("1001010100")
-	print(x.next_step(c))
