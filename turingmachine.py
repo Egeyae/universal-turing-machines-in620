@@ -1,5 +1,5 @@
 class Config:
-    def __init__(self, before: list, under: list, q: str|int) -> Config:
+    def __init__(self, before: list, under: list, q: str|int) :
         """
         Config class holds the current state of the machine
         Args:
@@ -35,7 +35,7 @@ class TM:
     TM for Turing Machine represents a Turing Machine code
     Computes for a given configuration the next step.s
     """
-    def __init__(self, name: str, states: set, init: str, accept: str, nb_tapes: int, transitions: dict) -> TM:
+    def __init__(self, name: str, states: set, init: str, accept: str, nb_tapes: int, transitions: dict) :
         self.name = name
         self.states = states
         self.nb_tapes = nb_tapes

@@ -101,14 +101,14 @@ def rename_states(machine) :
 	return(dico_states)
 
 def conversion_binaire_alphabet(symbol):
-	return ord(symbol) - ord(symbol)
+	return conversion_binaire(ord(symbol))
 
 def encode_alphabet(machine):
-	alphabet = ()
+	alphabet = []
 
 	for key,value in machine.transitions.items():
-		alphabet.add(key[0])
-		alphabet.add(value[0])
+		alphabet.append(key[0])
+		alphabet.append(value[0])
 
 	alphabet_bis = {}
 	for symbol in alphabet :
@@ -141,8 +141,8 @@ def MU(filepath):
 	machine_final = encode_transition(machine)
 	return machine_final
 
-#test marche pas mon pc reconait pas la classe Config jsp pk
-print(MU("test_1tape.tm"))
+
+print(MU("./files/test_1tape.tm"))
 
 def encode_binary(filepath):
 	"""Function that produces the binary coding of the mt simulator file 
