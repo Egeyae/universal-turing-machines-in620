@@ -143,18 +143,65 @@ class TM:
 
         return conf 
 
-    def run(self, conf: Config) -> None:
+    def run(self, conf: Config) -> Config:
         """
         Given a Config, computes all Config until end of program (q = 1) and returns the last Config
         """
-        pass
+        while conf.q != self.accept and conf.q !=-1:
+            self.next_step(conf)
+        return conf
+    
+    def run_start(self, input : str) -> Config:
+        """
+        Given an input, computes all Config until end of program (q = 1) and returns the last Config
+        """
+        config_init = self.create_init_config(input)
+        while config_init.q != self.accept and config_init.q !=-1:
+            self.next_step(config_init)
+        return config_init
 
-    def run_print(self, conf: Config) -> None:
+    def run_print_start(self, input : str) -> Config:
+        """
+        Given an input, computes all Config until end of program (q = 1) and returns the last Config
+        Also prints out in a pretty manner how it works
+        """
+        print(f"Running with TM : {self.name}")
+        conf = self.create_init_config(input)
+        step = 0
+        while conf.q != self.accept and conf.q != -1:
+            tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+            string = f"Step = {step} : {tuple_print}"
+            print(string)
+            self.next_step(conf)
+            step += 1
+        tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+        print(f"Final Configuration : {tuple_print}",end="")
+        if conf.q == self.accept :
+            print(" Accept")
+        else :
+            print(" Reject")
+        return conf
+
+    def run_print(self, conf: Config) -> Config:
         """
         Given a Config, computes all Config until end of program (q = 1) and returns the last Config
         Also prints out in a pretty manner how it works
         """
-        pass
+        print(f"Running with TM : {self.name}")
+        step = 0
+        while conf.q != self.accept and conf.q != -1:
+            tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+            string = f"Step = {step} : {tuple_print}"
+            print(string)
+            self.next_step(conf)
+            step += 1
+        tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
+        print(f"Final Configuration : {tuple_print}",end="")
+        if conf.q == self.accept :
+            print(" Accept")
+        else :
+            print(" Reject")
+        return conf
 
     def create_init_config(self, input_: str) -> Config:
         """
@@ -166,8 +213,6 @@ class TM:
             under[0].append(l)
 
         return Config(before,under,self.init)
-
-
 
 if __name__ == '__main__':
     tm = TM("toto", {0, 1, 2, 3}, 0, 3, 2, dict())
