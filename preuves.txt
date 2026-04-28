@@ -1,0 +1,12 @@
+- Preuve 1 :
+
+
+- Preuve 2 :
+
+- Preuve 3 :
+Soit L3 un langague tel que L3 = { < M > #x#y | M calcule la même chose sur les entrèes x et y }. On suppose que L3 est décidable. 
+Cela veut dire qu'on peut construire une machine M3 qui est capable de calculer L3. On suppose que la machine M3 est composé des 
+machines suivantes : Une machine qui simule la machine M, et on la duplique pour pouvoir calculer sur x et sur y. Ensuite on a une
+machine B qui compare la sortie des deux machines et qui regarde si il a été calculé la même chose. Pour cela, on est toujours sur
+de savoir si la machine s'arrête ou non sur x et y pour pouvoir comparer les entrées. Donc le problème de HALT est décidable. 
+Nous avons une contradiction en disant que le problème de HALT est décidable, car il ne l'est pas, donc L3 n'est pas décidable. 
