@@ -1,0 +1,137 @@
+name: Binary Comparison
+init: q0
+accept: qF
+
+// Ruban 1 : x#y
+// Ruban 2 : copie de y
+
+//We read x#y and copy y on the second ruban
+q0,0,_
+q0,0,_,>,>
+
+q0,1,_
+q0,1,_,>,>
+
+q0,#,_
+q1,_,_,>,>
+
+q1,0,_
+q1,_,0,>,>
+
+q1,1,_
+q1,_,1,>,>
+
+//Once we finished copying y we go back to compare x with y 
+q1,_,_
+q2,_,_,<,<
+
+q2,_,0
+q2,_,0,<,-
+
+q2,_,1
+q2,_,1,<,-
+
+//We compare x and y
+q2,1,0
+q3,1,0,-,-
+
+q2,1,1
+q3,1,1,-,-
+
+q2,0,1
+q3,0,1,-,-
+
+q3,0,0
+q3,0,0,<,<
+
+q3,1,1
+q3,1,1,<,<
+
+q3,0,1
+q3,0,1,<,<
+
+q3,1,0
+q3,1,0,<,<
+
+//If x is smaller than y then we accept the word 
+q3,_,0
+qF,_,0,-,-
+
+q3,_,1
+qF,_,1,-,-
+
+//If x is bigger than y then we continue to read x 
+q3,1,_
+q4,1,_,<,-
+
+q3,0,_
+q3,0,_,<,-
+
+q4,1,_
+q4,1,_,<,-
+
+q4,0,_
+q4,0,_,<,-
+
+//Once we have finished reading x we go back to read and copy y on the first ruban
+q4,_,_
+q5,_,_,>,>
+
+q5,_,_
+q5,_,_,>,>
+
+q5,1,1
+q5,1,1,>,-
+
+q5,0,0
+q5,0,0,>,-
+
+q5,1,0
+q5,1,0,>,-
+
+q5,0,1
+q5,0,1,>,-
+
+q5,_,1
+q6,#,1,>,-
+
+q5,_,0
+q6,#,0,>,-
+
+q6,_,0
+q6,0,_,>,>
+
+q6,_,1
+q6,1,_,>,>
+
+q6,_,_
+q6,_,_,<,<
+
+//Once we have finished to copy y on the first ruban we go back to the start of x#y
+q6,1,_
+q7,1,_,<,<
+
+q6,0,_
+q7,0,_,<,<
+
+q7,1,_
+q7,1,_,<,<
+
+q7,0,_
+q7,0,_,<,<
+
+q7,#,_
+q7,#,_,<,<
+
+q7,_,_
+q8,_,_,-,-
+
+//Once we are at the beginning of the word we start again so that we loop infinitly on the word
+q8,_,_
+q8,_,_,>,>
+
+q8,1,_
+q0,1,_,>,>
+
+q8,0,_
+q0,0,_,>,>
