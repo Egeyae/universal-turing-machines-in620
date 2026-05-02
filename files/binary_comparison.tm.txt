@@ -38,100 +38,85 @@ q3,1,0,-,-
 q2,1,1
 q3,1,1,-,-
 
+q2,0,0
+q3,0,0,-,- 
+
 q2,0,1
 q3,0,1,-,-
 
+// if x = y then we continue
 q3,0,0
 q3,0,0,<,<
 
 q3,1,1
 q3,1,1,<,<
 
+// x[i]=0, y[i]=1 : x < y we memorize in qL
 q3,0,1
-q3,0,1,<,<
+qL,0,1,<,<
 
+// x[i]=1, y[i]=0 : x > y we memorize in qG
 q3,1,0
-q3,1,0,<,<
+qG,1,0,<,<
 
-//If x is smaller than y then we accept the word 
+// x smaller than y : x < y : ACCEPT
 q3,_,0
 qF,_,0,-,-
 
 q3,_,1
 qF,_,1,-,-
 
-//If x is bigger than y then we continue to read x 
-q3,1,_
-q4,1,_,<,-
+q3,_,_
+qLoop,_,_,>,>
 
-q3,0,_
-q3,0,_,<,-
+qL,0,0
+qL,0,0,>,>
 
-q4,1,_
-q4,1,_,<,-
+qL,1,1
+qL,1,1,>,>
 
-q4,0,_
-q4,0,_,<,-
+qL,0,1
+qL,0,1,>,>
 
-//Once we have finished reading x we go back to read and copy y on the first ruban
-q4,_,_
-q5,_,_,>,>
+qL,1,0
+qG,1,0,>,>
 
-q5,_,_
-q5,_,_,>,>
+qL,_,_
+qF,_,_,-,-
 
-q5,1,1
-q5,1,1,>,-
+qL,_,0
+qF,_,0,-,-
 
-q5,0,0
-q5,0,0,>,-
+qL,_,1
+qF,_,1,-,-
 
-q5,1,0
-q5,1,0,>,-
+qG,0,0
+qG,0,0,>,>
 
-q5,0,1
-q5,0,1,>,-
+qG,1,1
+qG,1,1,>,>
 
-q5,_,1
-q6,#,1,>,-
+qG,0,1
+qL,0,1,>,>
 
-q5,_,0
-q6,#,0,>,-
+qG,1,0
+qG,1,0,>,>
 
-q6,_,0
-q6,0,_,>,>
+// end : x > y we loop
+qG,_,_
+qLoop,_,_,-,-
 
-q6,_,1
-q6,1,_,>,>
+qG,_,0
+qLoop,_,0,-,-
 
-q6,_,_
-q6,_,_,<,<
+qG,_,1
+qLoop,_,1,-,-
 
-//Once we have finished to copy y on the first ruban we go back to the start of x#y
-q6,1,_
-q7,1,_,<,<
+qLoop,1,1
+qLoop,1,1,>,>
 
-q6,0,_
-q7,0,_,<,<
+qLoop,0,0
+qLoop,0,0,>,>
 
-q7,1,_
-q7,1,_,<,<
-
-q7,0,_
-q7,0,_,<,<
-
-q7,#,_
-q7,#,_,<,<
-
-q7,_,_
-q8,_,_,-,-
-
-//Once we are at the beginning of the word we start again so that we loop infinitly on the word
-q8,_,_
-q8,_,_,>,>
-
-q8,1,_
-q0,1,_,>,>
-
-q8,0,_
-q0,0,_,>,>
+qLoop,_,_
+qLoop,_,_,-,-

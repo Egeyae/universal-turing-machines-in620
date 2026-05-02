@@ -1,5 +1,6 @@
 import re
 from turingmachine import TM, Config
+from universal_machine import UTM
 import os
 
 
@@ -17,7 +18,16 @@ ACCEPT_R = rf"^accept: ({STATE_R})$"
 # Finds every groups of read + transition
 BLOCK_R = rf"^({STATE_R}),((?:{ALPHA_R})+)\n({STATE_R}),((?:{ALPHA_R})+)$"
 
-def load_from_file(filepath: str) -> TM:
+UNIVERSAL_STATES_BITSIZE = rf"_states([0-9]+)"
+UNIVERSAL_ALPHA_BITSIZE = rf"_alpha([0-9]+)"
+
+def load_from_file(filepath: str) -> TM|UTM:
+	"""
+	Either load a Turing Machine (.tm) or a Universal Turing Machine (.utm) capable of running other Turing Machines (.bin.utm)
+
+	Args:
+		filepath: mandatory, path to Turing Machine
+	"""
 	if not (os.path.isfile(filepath) and os.path.splitext(filepath)[-1] in (".tm", ".utm")):
 		raise ValueError(f"{filepath} is not a valid path or is not a recognized extension")
 
@@ -57,130 +67,15 @@ def load_from_file(filepath: str) -> TM:
 		
 		transitions[read] = write
 
-	return TM(name,states,init,accept,number_tapes,transitions)
-
-if __name__ == '__main__':
-	x=load_from_file("./files/test_2tapes.tm")
-	print(x)
-
-	c = x.create_init_config("1001010100")
-	print(x.next_step(c))
-
-ALPHABET = {'0' :0, '1' : 1, '_' : 2}
-def binary_conversion(number, nb_bits):
-	"""Function that ables to convert decimal numbers in binary numbers
-	Parameter : number which represents the decimal number"""
-	
-	binary = bin(number)[2:]
-	if len(binary) > nb_bits : 
-		raise ValueError(f"{number} cannot fit in {nb_bits} bits")
-	return binary.zfill(nb_bits)
-	
-
-def rename_states(machine, nb_bits = 8) :
-	"""Renames all the states with a binary number instead
-	We force the naming of the initial state and the accept state to 0 and 1 each
-	Parameters : machine which represents the turing machine we want to convert
-	"""
-	max_states = 2 **nb_bits
-	if len(machine.states) > max_states :
-		raise ValueError(f"Too many states ({len(machine.states)}) for {nb_bits} bits (max{max_states})")
-	
-	dico_states = {}
-	dico_states[machine.init] = binary_conversion(0, nb_bits)
-	dico_states[machine.accept] = binary_conversion(1, nb_bits)
-
-	counter = 2
-
-	for state in machine.states :
-		if state not in dico_states:
-			dico_states[state] = binary_conversion(counter, nb_bits)
-			counter+=1
-	
-	return(dico_states)
-
-def symbol_to_bin(symbol, nb_bits = 8):
-	if symbol not in ALPHABET : 
-		raise ValueError(f"Symbol {symbol} not in fixed alphabet {set(ALPHABET.keys())}")
-	return binary_conversion(ord(symbol), nb_bits)
-
-def encode_alphabet(machine, nb_bits = 8):
-	alphabet = set()
-
-	for key,value in machine.transitions.items():
-		alphabet.add(key[1])
-		alphabet.add(value[1][0])
-
-	max_symbols = 2**nb_bits
-	if len(alphabet)>max_symbols : 
-		raise ValueError(f"Too many symbols ({len(alphabet)} for {nb_bits} bits (max {max_symbols}))")
-	
-	alphabet_bis = {}
-
-	for symbol in alphabet :
-		alphabet_bis[symbol] = symbol_to_bin(symbol, nb_bits)
-	return alphabet_bis
-
-MOVEMENTS = {'>' : 0, '-' : 1, '<':2 }
-
-def encode_movement(movement, nb_bits = 8):
-	if movement not in MOVEMENTS:
-		raise ValueError(f"Uknown movement :{movement}")
-	return binary_conversion(MOVEMENTS[movement], nb_bits)
+	tm = TM(name,states,init,accept,number_tapes,transitions)
+	if filepath.endswith(".tm"):
+		return tm
+	else:
+		states_size, alpha_size = re.search(UNIVERSAL_STATES_BITSIZE, filepath), re.search(UNIVERSAL_ALPHA_BITSIZE, filepath)
+		states_size = states_size.group(1)
+		alpha_size = alpha.group(1)
+		return UTM(tm, states_bits = states_size, alpha_bits = alpha_size)
 
 
-def encode_transition(machine, state_bits = 8, alphabet_bits = 8):
-	"""Transforms the syntax of the MT transitions into the syntax wanted
-	Parameter : MT"""
-
-	states = rename_states(machine, state_bits)
-	alphabet_machine = encode_alphabet(machine, alphabet_bits)
-	t_transitions = []
-	
-	for key,value in machine.transitions.items() :
-		current_state = states[key[0]]
-		symbol_read = alphabet_machine[key[1]]
-		new_state = states[value[0]]
-		symbol_written = alphabet_machine[value[1][0]]
-		movement = value[2][0]
-
-		t_transitions.append(current_state + "|" + symbol_read + "|" + new_state + "|" + symbol_written + "|" + movement)
-
-	return "|".join(t_transitions)
-
-def universal_machine(filepath, state_bits = 8, alphabet_bits = 8):
-	"""Final function to determine a universal machine 
-	Parameter : filepath"""
-
-	machine = load_from_file(filepath)
-	machine_final = encode_transition(machine, state_bits, alphabet_bits)
-	
-	return machine_final
 
 
-#print(universal_machine("./files/test_1tape.tm"))
-
-def encode_binary(filepath, state_bits= 8, alphabet_bits = 8):
-	"""Function that produces the binary coding of the mt simulator file 
-	Parameter : filepath"""
-	machine_final = universal_machine(filepath, state_bits, alphabet_bits )
-
-	elements = machine_final.split("|")
-
-	encoding =[]
-	for element in elements : 
-		if element in MOVEMENTS : 
-			encoding.append(encode_movement(element, alphabet_bits))
-		else: 
-			encoding.append(element)
-			
-	encoding = "".join(encoding)
-	integer = int(encoding, 2)
-
-	utm_path = filepath.replace('.tm', '.utm')
-	with open(utm_path, 'w') as f: 
-		f.write(encoding)
-
-	return encoding, integer
-
-print(encode_binary("./files/test_1tape.tm"))

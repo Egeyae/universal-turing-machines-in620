@@ -35,8 +35,11 @@ run.add_argument("file", help="File containing Turing Machine description")
 run.add_argument("input", help="Input for the TM, if it is a valid file, loads file content")
 # Output format describes question 4 and 5 => only print the output + acception status or we print every configurations that lead to final result
 run.add_argument("-of", "--output-format", choices=["normal", "pretty"], default="normal", help="If pretty used, prints all the TM steps, else prints the output only")
+# 
+run.add_argument("-b", "--bin", action="store_true", help="If set true, simulates the provided binary file using appropriate Universal Turing Machine and converts input to the right format. Crashes if not .utm.bin file is given as <file>.")
 
 
+to_bin = action.add_parser("bin", help="Converts a standard Turing Machine file to a binary file")
 # When cli.py is run, loads all passed arguments into args
 args = parser.parse_args()
 

@@ -67,6 +67,12 @@ valid,#,_,-,-
 read,_,_
 valid,_,_,-,-
 
+read,_,0
+end,_,_,-,-
+
+read,_,1
+end,_,_,-,-
+
 // go to end of word
 end,0,1
 end,0,1,>,-
@@ -94,6 +100,9 @@ bad,#,1,-,<
 
 end,#,_
 bad,#,_,-,<
+
+end,_,_
+end,_,_,-,-
 
 // go to end of x
 bad,#,1

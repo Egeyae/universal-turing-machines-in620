@@ -1,3 +1,5 @@
+import os
+
 class Config:
     def __init__(self, before: list, under: list, q: str|int):
         """
@@ -164,23 +166,23 @@ class TM:
         if count == nb_max and v :
             print("The maximun number of transition have been reach.")
         return conf,count
-
-    def run_start(self, input : str) -> Config:
+    
+    def run_start(self, input_ : str) -> Config:
         """
         Given an input, computes all Config until end of program (q = 1) and returns the last Config
         """
-        config_init = self.create_init_config(input)
+        config_init = self.create_init_config(input_)
         while config_init.q != self.accept and config_init.q !=-1:
             self.next_step(config_init)
         return config_init
 
-    def run_print_start(self, input : str) -> Config:
+    def run_print_start(self, input_ : str) -> Config:
         """
         Given an input, computes all Config until end of program (q = 1) and returns the last Config
         Also prints out in a pretty manner how it works
         """
         print(f"Running with TM : {self.name}")
-        conf = self.create_init_config(input)
+        conf = self.create_init_config(input_)
         step = 0
         while conf.q != self.accept and conf.q != -1:
             tuple_print = (*[''.join(conf.before[i]) for i in range(self.nb_tapes)],*[''.join(conf.under[i]) for i in range(self.nb_tapes)],conf.q)
@@ -227,6 +229,8 @@ class TM:
             under[0].append(l)
 
         return Config(before,under,self.init)
+
+
 
 if __name__ == '__main__':
     tm = TM("toto", {0, 1, 2, 3}, 0, 3, 2, dict())
