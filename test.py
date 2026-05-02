@@ -183,4 +183,3 @@ class TestUniversalCounterTM:
 		# TODO: executes all tests of this class
 		pass
 
-TestTM.runall()

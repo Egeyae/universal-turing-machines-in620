@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 from test import *
+from parser import load_from_file, encode_binary
 
 # Creates the parser object
 parser = argparse.ArgumentParser(
@@ -40,6 +41,10 @@ run.add_argument("-b", "--bin", action="store_true", help="If set true, simulate
 
 
 to_bin = action.add_parser("bin", help="Converts a standard Turing Machine file to a binary file")
+to_bin.add_argument("file", help="File containing Turing Machine description")
+to_bin.add_argument("-sb", "--states_bits", choices=[4], default=4, type=int, help="Number of bits used to compile T.M. states in binary (at 4, 2**4=16 max number of states)")
+to_bin.add_argument("-ab", "--alpha_bits", choices=[2], default=2, type=int, help="Number of bits used to compile T.M. alphabet. In this project we only support the following alphabet: {0, 1, _, #} but it can be extended")
+
 # When cli.py is run, loads all passed arguments into args
 args = parser.parse_args()
 
@@ -52,10 +57,10 @@ if args.out:
 match args.action:
 	# Test branch
 	case "test":
-		if args.v:
-			print(f"Running {args.w} tests")
+		if args.verbose:
+			print(f"Running {args.which} tests")
 		# We match which tests need to be executed
-		match args.w:
+		match args.which:
 			case "all":
 				TestTM.runall()
 				TestUniversalTM.runall()
@@ -72,24 +77,37 @@ match args.action:
 		assert os.path.isfile(args.file), "Invalid turing machine path specified"
 
 		# We set the input to passed argument by default
-		input_ = args.input_
+		input_ = args.input
 		# If input is a valid file, load instead the file content
 		if os.path.isfile(args.input):
 			with open(args.input) as f:
 				input_ = f.read()
 
-		if args.v:
-			print(f"Execution of {args.file} on {args.input} with output format = {args.of}")
+		if args.verbose:
+			print(f"Execution of {args.file} on {args.input} with output format = {args.output_format}")
 
-		# TODO: load the TM and init Config
+		if args.bin:
+			with open(args.file) as f:
+				states, alpha = map(int, f.readline().strip().split("|"))
+			name = f"./files/utm_states{states}_alpha{alpha}.utm"
 
-		match args.of:
-			case "normal":
-				# TODO: run the TM as question 4
-				pass
-			case "pretty":
-				# TODO : run the TM as question 5
-				pass
+			universal_machine = load_from_file(name, states_size=states, alpha_size=alpha)
+
+			universal_machine.load_and_run_binary(args.file, args.input, verbose=args.output_format == "pretty")
+		else:
+			machine = load_from_file(args.file)
+
+
+			match args.output_format:
+				case "normal":
+					print(machine.run_start(args.input))
+				case "pretty":
+					machine.run_print_start(args.input)
+
+	case "bin":
+		assert os.path.isfile(args.file), "Invalid turing machine path specified"
+
+		print(f"Generated: {encode_binary(args.file, args.states_bits, args.alpha_bits)[1]}")
 
 # If we saved results to a file, properly close the opened file at the end of execution
 if args.out:
