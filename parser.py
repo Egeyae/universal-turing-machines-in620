@@ -84,7 +84,6 @@ def binary_conversion(number, nb_bits):
 		number: represents the decimal number
 		nb_bits: number of bits the number should take as bin
 	"""
-	
 	binary = bin(number)[2:]
 	if len(binary) > nb_bits : 
 		raise ValueError(f"{number} cannot fit in {nb_bits} bits")

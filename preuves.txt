@@ -5,13 +5,13 @@ M1 est donc une machine universelle en mode compteur et dans le pire des cas se 
 Il existe donc une machine de Turing décidant le langage L1, L1 est donc un langage décidable.
 
 - Preuve 2 :
-Soit D2 la machine de turing qui décide le langage L2 =  {< M > #n | M s’arrête sur les mots de taille n } pour n'importe quelle entrée (< M > #n).
-Soit M' la machine qui simule M sur une entrée w. 
-Soit l'entrée (<M'> #0) :
-    D accepte donc la machine s'arrête sur 0
-    D n'accepte pas et la machine boucle 
-Or, si D accepte cette entrée cela signifie que le problème de HALT est décidable, il y a donc contradiction car celui-ci ne l'est pas.
-On peut donc conclure que L2 est indécidable.
+Soit le langage L2 =  {< M > #n | M s’arrête sur les mots de taille n } pour n'importe quelle entrée (< M > #n).
+On peut alors construire une machine M qui crée chaque mot de taille n et une machine M' qui simule M en prenant en compte le mot généré par M.
+Or si l'on considère une entrée < M > #n avec n supérieur à 0 on a :
+    Si M accepte cette entrée cela signifie que M accepte le mot w de taille n et que M' que M' accepte également le mot w en s'arrêtant sur ce mot.
+    Or cela voudrait dire que M' s'arrête sur tout mot w.
+Or cela signifie que si L2 est décidable, le problème de HALT l'est également ce qui crée une contradiction. On peut donc en conclure que 
+L2 est indécidable.
 
 - Preuve 3 :
 Soit L3 un langague tel que L3 = { < M > #x#y | M calcule la même chose sur les entrèes x et y }. On suppose que L3 est décidable. 
