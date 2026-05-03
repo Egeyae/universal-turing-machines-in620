@@ -157,7 +157,11 @@ class TM:
 
     def run_count(self,conf :Config, nb_max : int, v : bool = False) -> Config:
         """
-        Given a Config, computes all Config until end of program (q = 1) or until the maximun number of transition is reached and returns the last Config
+        Given a Config, computes all Config until end of program (q = 1) or until the maximun number of transition is reached and returns the last Config.
+        Parameters :
+            conf : A configuration of where to start the run.
+            nb_max : Maximun number of allowed transitions.
+            v : Verbose mode. True = Verbose activated, False = Verbose desactivated.
         """
         count = 0
         while (conf.q != self.accept and conf.q !=-1) and count < nb_max:
@@ -169,7 +173,9 @@ class TM:
     
     def run_start(self, input_ : str) -> Config:
         """
-        Given an input, computes all Config until end of program (q = 1) and returns the last Config
+        Given an input, computes all Config until end of program (q = 1) and returns the last Config.
+        Parameter :
+            _input : str input.
         """
         config_init = self.create_init_config(input_)
         while config_init.q != self.accept and config_init.q !=-1:
@@ -180,6 +186,8 @@ class TM:
         """
         Given an input, computes all Config until end of program (q = 1) and returns the last Config
         Also prints out in a pretty manner how it works
+        Parameter :
+            _input : str input.
         """
         print(f"Running with TM : {self.name}")
         conf = self.create_init_config(input_)
@@ -199,8 +207,10 @@ class TM:
 
     def run_print(self, conf: Config) -> Config:
         """
-        Given a Config, computes all Config until end of program (q = 1) and returns the last Config
-        Also prints out in a pretty manner how it works
+        Given a Config, computes all Config until end of program (q = 1) and returns the last Config.
+        Also prints out in a pretty manner how it works.
+        Paramater :
+            conf : A configuration of where to start the run.
         """
         print(f"Running with TM : {self.name}")
         step = 0
@@ -219,7 +229,9 @@ class TM:
 
     def create_init_config(self, input_: str) -> Config:
         """
-        Creates a Config using the input_, and gives it the good amount of tapes
+        Creates a Config using the input_, and gives it the good amount of tapes.
+        Parameter :
+            _input : str input.
         """
         before, under = [[] for _ in range(self.nb_tapes)], [[] for _ in range(self.nb_tapes)]
 
