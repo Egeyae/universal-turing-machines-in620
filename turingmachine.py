@@ -68,80 +68,89 @@ class TM:
 
     def read(self, conf: Config) -> tuple:
         """
+        Reads the symbol under the read head of each tape
         Args:
-            conf: Config
+            conf: current configuration of the Turing machine
         Return
             (q, a1, a2, ...):  tuple describing what is read
         """
         machine = []
         for i in range(self.nb_tapes) :
-            if (len(conf.under[i]) ) > 0 : 
+            if (len(conf.under[i]) ) > 0 : #we read the symbol under the head 
                 machine.append(conf.under[i][0])
             else : 
-                machine.append('_')
+                machine.append('_')#if the tape is empty we return a blank symbol
         return tuple([conf.q] + machine) 
 
     def write(self, conf: Config, symbols: list) -> None:
         """
+        Writes new symbols under the head of each tape.
         Args:
-            conf: Config
-            symbols: symbols to write into conf
+            conf: current configuration of the turing machine
+            symbols: symbols we write into conf
         Return
             None since it modifies the configuration
         """
         for i in range(self.nb_tapes):
             if len(conf.under[i]) > 0 :
-                conf.under[i][0] = symbols[i]
+                conf.under[i][0] = symbols[i]#overwrites the symbol currently under the head
             else : 
+                #if the tape is empty we insert the symbol at position 0
                 conf.under[i].insert(0, symbols[i])
 
     def move(self, conf: Config, movements: list) -> None:
         """
+        Moves the read head of each tape according to the given directions
         Args:
-            conf: Config
+            conf: current configuration of the turing machine
             movements: direction in which to move each tape of the Config
         """
         for i in range(self.nb_tapes):
             direction = movements[i]
 
             if direction == '>':
+                #when we move to the right we pop the symbol under head into before and we then advance to the next one
                 symbol = conf.under[i].pop(0) if conf.under[i] else '_'
                 conf.before[i].append(symbol)
-                if not conf.under[i]:
+                if not conf.under[i]:#if we have reached the end we extend the tape with a blank
                     conf.under[i].append('_')  
 
             elif direction == '<':
+                #when we move to the left we pop the last symbol of before and we insert it as a new head symbol 
                 incoming = conf.before[i].pop() if conf.before[i] else '_'
                 conf.under[i].insert(0, incoming)
            
 
     def next_step(self, conf: Config) -> Config:
         """
-        Given a Config, returns the new Config following the machine rules
+        Computes the next configuration of the machine from the current one following the machine rules
+        Args : 
+            conf : current configuration of the turing machine 
+        Return : 
+            updated configuration after one step 
         """
-        #si on arrive dans un état accept ou reject on execute pas le prochain état 
-        #pour représenter un état reject on choisit -1 
-
+        #If we are already in accept or reject state we do not execute further
+        #Reject state is represented by -1
         if conf.q == self.accept:
             return conf
         elif conf.q == -1:
             return conf
 
-        key = self.read(conf)
+        key = self.read(conf)#we read the current state and symbols under each head 
 
-        if key not in self.transitions:
+        if key not in self.transitions:#if no transitions exists for this key, we reject 
             conf.q = -1
             return conf
 
-        transition = self.transitions[key]
+        transition = self.transitions[key]#we retrieve the transition
         
-        new_state   = transition[0]   
-        new_symbols = transition[1]   
-        movements   = transition[2]   
+        new_state   = transition[0]   #destination state 
+        new_symbols = transition[1]   #symbols to write on each tape
+        movements   = transition[2]   #directions to move each head
 
-        self.write(conf, new_symbols)
-        self.move(conf, movements)
-        conf.q = new_state
+        self.write(conf, new_symbols)#we write the new symbols under each head
+        self.move(conf, movements)#we move each head
+        conf.q = new_state#we update the current state
 
         return conf 
 
@@ -157,7 +166,11 @@ class TM:
 
     def run_count(self,conf :Config, nb_max : int, v : bool = False) -> Config:
         """
-        Given a Config, computes all Config until end of program (q = 1) or until the maximun number of transition is reached and returns the last Config
+        Given a Config, computes all Config until end of program (q = 1) or until the maximun number of transition is reached and returns the last Config.
+        Parameters :
+            conf : A configuration of where to start the run.
+            nb_max : Maximun number of allowed transitions.
+            v : Verbose mode. True = Verbose activated, False = Verbose desactivated.
         """
         count = 0
         while (conf.q != self.accept and conf.q !=-1) and count < nb_max:
@@ -169,7 +182,9 @@ class TM:
     
     def run_start(self, input_ : str) -> Config:
         """
-        Given an input, computes all Config until end of program (q = 1) and returns the last Config
+        Given an input, computes all Config until end of program (q = 1) and returns the last Config.
+        Parameter :
+            _input : str input.
         """
         config_init = self.create_init_config(input_)
         while config_init.q != self.accept and config_init.q !=-1:
@@ -180,6 +195,8 @@ class TM:
         """
         Given an input, computes all Config until end of program (q = 1) and returns the last Config
         Also prints out in a pretty manner how it works
+        Parameter :
+            _input : str input.
         """
         print(f"Running with TM : {self.name}")
         conf = self.create_init_config(input_)
@@ -199,8 +216,10 @@ class TM:
 
     def run_print(self, conf: Config) -> Config:
         """
-        Given a Config, computes all Config until end of program (q = 1) and returns the last Config
-        Also prints out in a pretty manner how it works
+        Given a Config, computes all Config until end of program (q = 1) and returns the last Config.
+        Also prints out in a pretty manner how it works.
+        Paramater :
+            conf : A configuration of where to start the run.
         """
         print(f"Running with TM : {self.name}")
         step = 0
@@ -219,7 +238,9 @@ class TM:
 
     def create_init_config(self, input_: str) -> Config:
         """
-        Creates a Config using the input_, and gives it the good amount of tapes
+        Creates a Config using the input_, and gives it the good amount of tapes.
+        Parameter :
+            _input : str input.
         """
         before, under = [[] for _ in range(self.nb_tapes)], [[] for _ in range(self.nb_tapes)]
 
