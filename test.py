@@ -313,10 +313,30 @@ class TestUniversalCounterTM:
 		print("Testing correct simulation with the Universal Machine Counter.")
 		
 		# Testing with the machine one tape bis who transform 0 in 1 and 1 in 0.
-		test_1tape_binary = p.encode_binary("./files/test_1tape_bis.tm")[0]
 
+		#We try with a "good" n, who will be enough. N is in unary
+		test_1tape_binary = p.encode_binary("./files/test_1tape_bis.tm")[0]
+		UMC = p.load_from_file("./files/uctm_states4_alpha2.utm")
+		config_test1 = UMC.run_code(test_1tape_binary,'010001#111111')
+		TM_test1 = p.load_from_file("./files/test_1tape_bis.tm")
+		config1 = TM_test1.run_start("101")
+
+		assert "".join([config_test1.before[0][i] for i in range(len(config_test1.before[0])) if config_test1.before[0][i] != '_'])+"".join([config_test1.under[0][i] for i in range(len(config_test1.under[0])) if config_test1.under[0][i] != '_']) ==  test_1tape_binary[1:] 
+		assert "".join([config_test1.under[1][i] for i in range(1,5)]) == '0001' and "".join([config_test1.under[1][i] for i in range(5,7)]) == p.symbol_to_bin(config1.under[0][0])
+		assert "".join([config_test1.before[2][i] for i in range(len(config_test1.before[2])) if config_test1.before[2][i] != '_'])+"".join([config_test1.under[2][i] for i in range(len(config_test1.under[2])) if config_test1.under[2][i] != '_']) == "".join([p.symbol_to_bin(config1.before[0][i]) for i in range(len(config1.before[0])) if config1.before[0][i] != '_'])+"".join(p.symbol_to_bin('_'))
+		assert config_test1.before[3].count('1')+config_test1.under[3].count('1') == 3
+
+		test_1tape_binary = p.encode_binary("./files/test_1tape_bis.tm")[0]
+		UMC = p.load_from_file("./files/uctm_states4_alpha2.utm")
+		config_test2 = UMC.run_code(test_1tape_binary,'010001#1')
+		TM_test1 = p.load_from_file("./files/test_1tape_bis.tm")
+
+		assert config_test2.before[3].count('1')+config_test2.under[3].count('1') == 0
+		assert config_test2.q == -1
+		
 if __name__ == '__main__':
 	TestTM.runall()
 	#tm_test = p.load_from_file("./files/linearsearch.tm")
 	#tm_test.run_print_start('1#01#10#00#1')
 	TestUniversalTM.runall()
+	TestUniversalCounterTM.runall()
