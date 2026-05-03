@@ -1,5 +1,7 @@
 - Preuve 1 :
-
+Soit la machine de turing M1 à 4 rubans, M1 prend en entrée <M>#n. La machine copie et supprime le n sur les rubans 3 et 4. 
+Puis, M1 simule <M> sur n en utilisant les 3 premiers rubans et à chaque transition, diminue de 1 la valeur sur le ruban 4.
+M1 est donc une machine universelle en mode compteur et dans le pire des cas se calcule en O(n)
 
 - Preuve 2 :
 
