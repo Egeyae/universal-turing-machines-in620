@@ -79,7 +79,7 @@ class TM:
             if (len(conf.under[i]) ) > 0 : #we read the symbol under the head 
                 machine.append(conf.under[i][0])
             else : 
-                machine.append('_')#if the tape is empty we return a bkank symbol
+                machine.append('_')#if the tape is empty we return a blank symbol
         return tuple([conf.q] + machine) 
 
     def write(self, conf: Config, symbols: list) -> None:
