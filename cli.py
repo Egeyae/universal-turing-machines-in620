@@ -108,16 +108,16 @@ match args.action:
 				TestTM.unarymultiplication()
 
 			case "7":
-				pass
+				TestUniversalTM.encode_transition()
 
 			case "8":
-				pass
+				TestUniversalTM.encode_binary()
 
 			case "9":
-				pass
+				TestUniversalTM.Universal_Machine()
 
 			case "10":
-				pass
+				TestUniversalCounterTM.Universal_Machine_Counter()
 
 	# Execution branch
 	case "run":

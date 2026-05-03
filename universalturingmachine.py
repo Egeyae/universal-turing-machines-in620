@@ -18,32 +18,31 @@ def binary_conversion(number, nb_bits):
 def convert_input_to_binary(input_, alphabet_bits=2):
 	return "".join([binary_conversion(ALPHABET[x], alphabet_bits) for x in input_])
 
-
 class UTM:
-    def __init__(self, machine, states_bits=4, alpha_bits=2):
-        self.name = machine.name
+	def __init__(self, machine, states_bits=4, alpha_bits=2):
+		self.name = machine.name
 
-        self.states_bits = states_bits
-        self.alpha_bits = alpha_bits
+		self.states_bits = states_bits
+		self.alpha_bits = alpha_bits
 
-        self.machine = machine
+		self.machine = machine
 
-    def run_code(self, code, input_):
-        return self.machine.run_start(f"{code}#{input_}")
+	def run_code(self, code, input_):
+		return self.machine.run_start(f"{code}#{input_}")
 
-    def run_code_print(self, code, input_):
-        return self.machine.run_print_start(f"{code}#{input_}")
+	def run_code_print(self, code, input_):
+		return self.machine.run_print_start(f"{code}#{input_}")
 
 
-    def load_and_run_binary(self, filepath, input_, verbose=False, in_bin=False):
-    	if not in_bin:
-    		input_ = convert_input_to_binary(input_, alphabet_bits=self.alpha_bits)
-    
-    	with open(filepath, 'r') as f:
-    		f.readline()
-    		code = f.read().strip()
+	def load_and_run_binary(self, filepath, input_, verbose=False, in_bin=False):
+		if not in_bin:
+			input_ = convert_input_to_binary(input_, alphabet_bits=self.alpha_bits)
 
-    	if verbose:
-    		self.run_code_print(code, input_)
-    	else:
-    		print(self.run_code(code, input_))
+		with open(filepath, 'r') as f:
+			f.readline()
+			code = f.read().strip()
+
+		if verbose:
+			self.run_code_print(code, input_)
+		else:
+			print(self.run_code(code, input_))
