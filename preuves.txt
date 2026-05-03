@@ -8,7 +8,7 @@ Il existe donc une machine de Turing décidant le langage L1, L1 est donc un lan
 Soit le langage L2 =  {< M > #n | M s’arrête sur les mots de taille n } pour n'importe quelle entrée (< M > #n).
 On peut alors construire une machine M qui crée chaque mot de taille n et une machine M' qui simule M en prenant en compte le mot généré par M.
 Or si l'on considère une entrée < M > #n avec n supérieur à 0 on a :
-    Si M accepte cette entrée cela signifie que M accepte le mot w de taille n et que M' que M' accepte également le mot w en s'arrêtant sur ce mot.
+    Si M accepte cette entrée cela signifie que M accepte le mot w de taille n et que M' accepte également le mot w en s'arrêtant sur ce mot.
     Or cela voudrait dire que M' s'arrête sur tout mot w.
 Or cela signifie que si L2 est décidable, le problème de HALT l'est également ce qui crée une contradiction. On peut donc en conclure que 
 L2 est indécidable.
