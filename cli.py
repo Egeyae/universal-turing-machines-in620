@@ -95,9 +95,10 @@ match args.action:
 
 			case "5":
 				print("Testing full prints of ./files/test_1tape.tm on 01011101")
+				TM_test = load_from_file("./files/test_1tape.tm")
+
 				TM_test.run_print_start("01011101")
 
-				TM_test = load_from_file("./files/test_1tape.tm")
 
 				print("Testing full prints of ./files/test_1tape.tm on 01011101")
 				TM_test.run_print_start("01011101")
