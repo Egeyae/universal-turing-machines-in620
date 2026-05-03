@@ -65,12 +65,58 @@ match args.action:
 				TestTM.runall()
 				TestUniversalTM.runall()
 				TestUniversalCounterTM.runall()
+
 			case "tm":
 				TestTM.runall()
+
 			case "utm":
 				TestUniversalTM.runall()
+
 			case "uctm":
 				TestUniversalCounterTM.runall()
+
+			case "2":
+				TM_test = load_from_file("./files/test_1tape.tm")
+				print(TM_test)
+				TestTM.create_init_config()
+
+			case "3":
+				TestTM.read()
+				TestTM.write()
+				TestTM.move()
+				TestTM.next_step()
+
+			case "4":
+				TestTM.run()
+				TestTM.run_start()
+				TestTM.run_count()
+
+			case "5":
+				print("Testing full prints of ./files/test_1tape.tm on 01011101")
+				TM_test.run_print_start("01011101")
+
+				TM_test = load_from_file("./files/test_1tape.tm")
+
+				print("Testing full prints of ./files/test_1tape.tm on 01011101")
+				TM_test.run_print_start("01011101")
+
+			case "6":
+				TestTM.binary_comparison()
+				TestTM.linearsearch()
+				TestTM.unarymultiplication()
+
+			case "7":
+				pass
+
+			case "8":
+				pass
+
+			case "9":
+				pass
+
+			case "10":
+				pass
+				
 	# Execution branch
 	case "run":
 		# We ensure that file arg is a valid, existing file

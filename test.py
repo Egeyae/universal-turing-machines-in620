@@ -2,11 +2,9 @@ import parser as p
 import turingmachine as TM
 
 class TestTM:
-	# TODO: test the Turing Machine class
 	@staticmethod
 	def runall():
 		print("Executing test on the Classic Turing Machine")
-		# TODO: executes all tests of this class
 		TestTM.create_init_config()
 		TestTM.read()
 		TestTM.write()
@@ -43,6 +41,8 @@ class TestTM:
 		assert len(config_init2_test.under[0]) == 1 and config_init2_test.under[0] == ['0']
 		assert len(config_init2_test.under[1]) == 0
 		assert config_init2_test.q == TM_test2.init
+
+		print("create_init_config pass all tests")
 
 	@staticmethod
 	def read():

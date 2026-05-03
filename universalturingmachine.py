@@ -1,5 +1,5 @@
 # Here ALPHABET, binary_conversion and convert_input_to_binary are duplicate of parser.py functions, this is temporary to avoid circular imports
-
+# We should use a util.py script or similar that implements such functions. It would avoid circular imports
 ALPHABET = {'0' :0, '1' : 1, '_' : 3, '#' : 2}
 
 
